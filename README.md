@@ -4,14 +4,6 @@ BukuBerbagi adalah platform berbasis web untuk memfasilitasi pendonasian buku fi
 
 ---
 
-## 🎨 UI/UX Theme: Luxury Minimalist / Nordic Gallery
-Proyek ini mengadopsi estetika **Luxury Minimalist** yang bersih, terstruktur, dan modern:
-* **Tipografi Premium**: Pairing font modern `'Outfit'` (Heading) dan `'Plus Jakarta Sans'` (Body) dari Google Fonts.
-* **Palet Warna Organik**: Dominasi warna Linen/Putih Bersih (`#f9fafb` / `#ffffff`) dengan aksen utama **Forest Sage Green** (`#2d5a47`) dan bayangan difusi lembut (*diffusion shadows*).
-* **Responsive Layout**: Sepenuhnya responsif menggunakan Bootstrap 5 dengan desain kolom asimetris dan *split-screen* pada halaman autentikasi.
-
----
-
 ## 🛠️ Tech Stack & Prasyarat
 * **Bahasa & Logika**: PHP Native (v8.x didukung)
 * **CSS & Layout**: Bootstrap 5 (via CDN) & Custom CSS murni
@@ -67,7 +59,7 @@ tubes/
 ## 🔑 Kredensial Akun Pengujian (Testing Accounts)
 
 ### 1. Akun Admin
-* **Email**: `admin@donasibuku.com`
+* **Email**: `admin@gmail.com`
 * **Kata Sandi**: `admin123`
 
 ### 2. Akun Pendonasi Dummy (Dibuat otomatis oleh seeder)
@@ -81,7 +73,7 @@ tubes/
 ## 📋 Alur Bisnis Pengujian Sistem
 1. **Daftar/Masuk**: Masuk menggunakan akun Pendonasi `budi@gmail.com`.
 2. **Ajukan Donasi**: Klik **Donasikan Buku Baru** -> isi data, unggah foto -> Kirim. (Status donasi awal adalah `Pending`).
-3. **Persetujuan Admin**: Logout, lalu masuk sebagai Admin (`admin@donasibuku.com`). Pada dashboard admin, pilih detail donasi budi, klik **Setujui Pengajuan**.
+3. **Persetujuan Admin**: Logout, lalu masuk sebagai Admin (`admin@gmail.com`). Pada dashboard admin, pilih detail donasi budi, klik **Setujui Pengajuan**.
 4. **Kirim Buku**: Logout dan masuk kembali sebagai budi. Status donasi budi kini `Disetujui`. Klik **Kirim Buku**, pilih metode kirim (misal: Kurir), isi ekspedisi dan nomor resi, klik Konfirmasi. (Status berubah menjadi `Sedang Dikirim`).
 5. **Konfirmasi Fisik**: Masuk kembali sebagai Admin, klik detail donasi budi, klik **Konfirmasi Terima Buku Fisik**. (Status berubah menjadi `Diterima`).
 6. **Katalog & Penyaluran**:

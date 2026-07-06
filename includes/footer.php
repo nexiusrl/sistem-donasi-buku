@@ -16,8 +16,11 @@
                     <h6 class="text-white mb-3">Tautan Cepat</h6>
                     <ul class="list-unstyled d-flex flex-column gap-2 small">
                         <li><a href="<?= $base_path ?>index.php">Beranda</a></li>
-                        <?php if (isset($_SESSION['user_id'])): ?>
-                            <li><a href="<?= $_SESSION['role'] === 'admin' ? $base_path.'views/admin/dashboard.php' : $base_path.'views/pendonasi/dashboard.php' ?>">Dashboard</a></li>
+                        <?php if (isset($_SESSION["user_id"])): ?>
+                            <li><a href="<?= $_SESSION["role"] === "admin"
+                              ? $base_path . "views/admin/dashboard.php"
+                              : $base_path .
+                                "views/pendonasi/dashboard.php" ?>">Dashboard</a></li>
                         <?php else: ?>
                             <li><a href="<?= $base_path ?>login.php">Masuk</a></li>
                             <li><a href="<?= $base_path ?>register.php">Daftar Pendonasi</a></li>
@@ -35,8 +38,9 @@
             </div>
             <hr class="border-secondary my-4">
             <div class="d-flex flex-column flex-sm-row justify-content-between align-items-center small">
-                <p class="mb-0">&copy; <?= date('Y') ?> BukuBerbagi. Hak Cipta Dilindungi.</p>
-                <p class="mb-0 text-white">Praktikum Pemrograman Web</p>
+                <p class="mb-0">&copy; <?= date(
+                  "Y",
+                ) ?> BukuBerbagi. Hak Cipta Dilindungi.</p>
             </div>
         </div>
     </footer>

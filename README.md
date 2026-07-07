@@ -1,14 +1,14 @@
 # BukuBerbagi - Sistem Pendonasian Buku Fisik
 
-BukuBerbagi adalah platform berbasis web untuk memfasilitasi pendonasian buku fisik secara online oleh masyarakat umum (Pendonasi), yang selanjutnya diverifikasi dan disalurkan secara offline ke sekolah-sekolah, panti asuhan, atau perpustakaan jalanan oleh pengelola (Admin).
+BukuBerbagi adalah platform berbasis web untuk memfasilitasi pendonasian buku fisik secara online oleh masyarakat umum (Pendonasi), yang selanjutnya diverifikasi dan disalurkan secara offline ke sekolah-sekolah, panti asuhan, perpustakaan jalanan, maupun individu/orang umum yang membutuhkan oleh pengelola (Admin).
 
 ---
 
 ## 🛠️ Tech Stack & Prasyarat
 * **Bahasa & Logika**: PHP Native (v8.x didukung)
 * **CSS & Layout**: Bootstrap 5 (via CDN) & Custom CSS murni
-* **JavaScript**: Vanilla JS murni (tanpa jQuery / library eksternal)
-* **Database**: MySQL (dijalankan di Laragon / XAMPP)
+* **JavaScript**: Vanilla JS
+* **Database**: MySQL
 
 ---
 
@@ -56,20 +56,6 @@ tubes/
 
 ---
 
-## 🔑 Kredensial Akun Pengujian (Testing Accounts)
-
-### 1. Akun Admin
-* **Email**: `admin@gmail.com`
-* **Kata Sandi**: `admin123`
-
-### 2. Akun Pendonasi Dummy (Dibuat otomatis oleh seeder)
-* **Email**: `budi@gmail.com`
-* **Kata Sandi**: `password123`
-* **Email**: `siti@gmail.com`
-* **Kata Sandi**: `password123`
-
----
-
 ## 📋 Alur Bisnis Pengujian Sistem
 1. **Daftar/Masuk**: Masuk menggunakan akun Pendonasi `budi@gmail.com`.
 2. **Ajukan Donasi**: Klik **Donasikan Buku Baru** -> isi data, unggah foto -> Kirim. (Status donasi awal adalah `Pending`).
@@ -95,7 +81,7 @@ Sistem ini memiliki dua peran utama dengan akses dan tugas yang berbeda:
     *   Mengurasi/memvalidasi usulan donasi dari pendonasi (menyetujui atau menolak).
     *   Mengonfirmasi penerimaan fisik buku berdasarkan informasi pengiriman.
     *   Mengelola stok buku yang telah berstatus "Diterima".
-    *   Mencatat penyaluran buku secara offline ke penerima (sekolah, perpustakaan jalanan, komunitas baca, dll.).
+    *   Mencatat penyaluran buku secara offline ke penerima (sekolah, perpustakaan jalanan, komunitas baca, panti asuhan, maupun perorangan/umum).
 
 ---
 
@@ -162,7 +148,7 @@ Proses pendonasian buku fisik secara terperinci berjalan sebagai berikut:
 ### Langkah 6: Penyaluran Offline (Admin)
 1. Admin membuka halaman **Stok & Inventaris** (`views/admin/stok.php`).
 2. Admin memilih buku yang ingin disalurkan secara offline dan menekan tombol **Salurkan Buku** (`views/admin/distribusi.php`).
-3. Admin mengisi nama instansi/komunitas penerima, tanggal penyaluran, jumlah buku yang disalurkan, dan keterangan tambahan.
+3. Admin mengisi nama instansi/komunitas/orang umum penerima, tanggal penyaluran, jumlah buku yang disalurkan, dan keterangan tambahan.
 4. Sistem mencatat log transaksi ke tabel `distribusi` dan mengurangi jumlah/mengupdate status stok donasi yang bersangkutan jika seluruh stoknya telah disalurkan.
 
 ---

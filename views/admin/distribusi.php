@@ -123,8 +123,8 @@ try {
                         <input type="hidden" name="donasi_id" value="<?= $buku['id'] ?>">
 
                         <div class="mb-3">
-                            <label for="nama_penerima" class="form-label">Nama Penerima / Lokasi</label>
-                            <input type="text" class="form-control" id="nama_penerima" name="nama_penerima" placeholder="Contoh: SD Negeri 2 Cikutra" required>
+                            <label for="nama_penerima" class="form-label">Nama Penerima / Lokasi / Orang Umum</label>
+                            <input type="text" class="form-control" id="nama_penerima" name="nama_penerima" placeholder="Contoh: Budi Setiawan (Umum) atau SD Negeri 2 Cikutra" required>
                         </div>
 
                         <div class="mb-3">

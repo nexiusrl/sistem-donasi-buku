@@ -1,8 +1,6 @@
 <?php
 // includes/header.php
-if (session_status() == PHP_SESSION_NONE) {
-  session_start();
-}
+require_once __DIR__ . '/session.php';
 
 // Menentukan relative path ke root folder secara dinamis
 $script_name = $_SERVER["SCRIPT_NAME"];

@@ -1,7 +1,8 @@
 <?php
 // login.php
 require_once 'config/database.php';
-require_once 'includes/header.php';
+
+require_once 'includes/session.php';
 
 // Redirect jika sudah login
 if (isset($_SESSION['user_id'])) {
@@ -28,6 +29,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $user = $stmt->fetch();
 
             if ($user && password_verify($password, $user['password'])) {
+                // Regenerasi session ID untuk keamanan
+                regenerate_session_secure();
+
                 // Set session
                 $_SESSION['user_id'] = $user['id'];
                 $_SESSION['nama'] = $user['nama'];
@@ -48,6 +52,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 }
+
+require_once 'includes/header.php';
 ?>
 
 <div class="container-fluid px-0 py-0" style="margin-top: -1.5rem; min-height: calc(100vh - 140px); display: flex;">

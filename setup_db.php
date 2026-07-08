@@ -2,10 +2,25 @@
 // setup_db.php
 // Script otomatis untuk inisialisasi database dan seeding data dummy
 
-$host = "localhost";
-$username = "root";
-$password = ""; // Default password Laragon kosong
-$db_name = "db_donasi_buku";
+// Deteksi lingkungan otomatis (localhost vs hosting)
+$is_local = false;
+if (php_sapi_name() === 'cli') {
+    $is_local = true; // Jika dijalankan via command line/CLI
+} elseif (isset($_SERVER['HTTP_HOST']) && in_array($_SERVER['HTTP_HOST'], ['localhost', '127.0.0.1'])) {
+    $is_local = true; // Jika dijalankan via browser di localhost
+}
+
+if ($is_local) {
+    $host = "localhost";
+    $username = "root";
+    $password = ""; // Default password Laragon/XAMPP kosong
+    $db_name = "db_donasi_buku";
+} else {
+    $host = "sql300.infinityfree.com";
+    $username = "if0_42351389";
+    $password = "T6qmDpePE1fDKE";
+    $db_name = "if0_42351389_db_donasi_buku";
+}
 
 // Mengatur output agar rapi di browser maupun CLI
 $is_cli = php_sapi_name() === "cli";

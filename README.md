@@ -22,10 +22,11 @@ tubes/
 │   │   └── main.js         # Interaksi JS murni
 │   └── uploads/            # Folder upload foto buku dari pendonasi
 ├── config/                 # Pengaturan sistem & database
-│   └── database.php        # File koneksi PDO MySQL
+│   └── database.php        # File koneksi PDO MySQL (Auto-deteksi localhost & InfinityFree)
 ├── includes/               # Komponen template berulang
 │   ├── header.php          # Navbar & load Google Fonts & CSS
-│   └── footer.php          # Footer & load JS
+│   ├── footer.php          # Footer & load JS
+│   └── session.php         # File helper session terpusat yang aman (HttpOnly, SameSite, Secure, Lifetime=0)
 ├── views/                  # Halaman spesifik role
 │   ├── admin/              # Panel dashboard kurasi & distribusi admin
 │   └── pendonasi/          # Panel dashboard donasi & resi pendonasi
@@ -222,6 +223,7 @@ graph TD
     
     %% Config & Includes
     db_config["config/database.php (PDO Connection)"]
+    session_config["includes/session.php (Secure Session Helper)"]
     header["includes/header.php (Navbar & CSS)"]
     footer["includes/footer.php (JS & Footer)"]
     
@@ -261,6 +263,20 @@ graph TD
     dashboard_p & tambah_d & kirim_b & dashboard_a & detail_d & stok_a & distribusi_a -.-> db_config
     dashboard_p & tambah_d & kirim_b & dashboard_a & detail_d & stok_a & distribusi_a -.-> header
     dashboard_p & tambah_d & kirim_b & dashboard_a & detail_d & stok_a & distribusi_a -.-> footer
+    header & login.php & register.php & logout.php -.-> session_config
 ```
 
-*Keterangan: Garis putus-putus menunjukkan file tersebut mengikutsertakan (include) konfigurasi database atau template layout header & footer.*
+*Keterangan: Garis putus-putus menunjukkan file tersebut mengikutsertakan (include) konfigurasi database, helper session, atau template layout header & footer.*
+
+---
+
+## 🔒 Fitur Keamanan Terintegrasi (Session & Cookie)
+
+Aplikasi ini menggunakan manajemen session dan cookie terpusat yang telah diperkuat terhadap berbagai celah keamanan web:
+* **Masa Berlaku Sesi Terbatas (Lifetime = 0):** Sesi login dan cookie secara otomatis dihapus dari browser ketika pengguna menutup seluruh jendela aplikasi browser. Pengguna wajib melakukan login ulang untuk masuk kembali.
+* **HttpOnly Cookie Flag:** Mengamankan cookie session ID (`PHPSESSID`) sehingga tidak bisa diakses oleh skrip berbahaya di sisi klien (melindungi dari pencurian sesi lewat serangan XSS).
+* **SameSite Lax Flag:** Melindungi aplikasi dari serangan *Cross-Site Request Forgery* (CSRF) dengan membatasi transmisi cookie pada permintaan lintas situs.
+* **Auto-Secure Flag (HTTPS/HTTP):** Cookie session secara dinamis mendeteksi penggunaan HTTPS (termasuk deteksi di balik reverse proxy) untuk memastikan session ID hanya ditransmisikan melalui saluran terenkripsi jika berjalan di produksi.
+* **Regenerasi Session ID:** Meregenerasi ID session setiap kali status login berubah (pada proses `login.php` dan `register.php`), sehingga mencegah serangan *Session Fixation*.
+* **Force Cookie Expiry saat Logout:** Menghapus data sesi dan secara aktif memaksa masa berlaku cookie session di browser menjadi lampau untuk memastikan pembersihan total.
+

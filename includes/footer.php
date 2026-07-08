@@ -32,7 +32,7 @@
                     <ul class="list-unstyled d-flex flex-column gap-2 small">
                         <li><i class="bi bi-envelope me-2"></i> info@bukuberbagi.org</li>
                         <li><i class="bi bi-telephone me-2"></i> +62 812-3456-7890</li>
-                        <li><i class="bi bi-geo-alt me-2"></i> Bandung, Jawa Barat</li>
+                        <li><i class="bi bi-geo-alt me-2"></i> Makassar, Sulawesi Selatan</li>
                     </ul>
                 </div>
             </div>

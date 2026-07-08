@@ -1,11 +1,16 @@
 <?php
 // register.php
 require_once 'config/database.php';
-require_once 'includes/header.php';
+
+require_once 'includes/session.php';
 
 // Redirect jika sudah login
 if (isset($_SESSION['user_id'])) {
-    header("Location: index.php");
+    if ($_SESSION['role'] === 'admin') {
+        header("Location: views/admin/dashboard.php");
+    } else {
+        header("Location: views/pendonasi/dashboard.php");
+    }
     exit();
 }
 
@@ -20,8 +25,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (empty($nama) || empty($email) || empty($password) || empty($no_telp)) {
         $error = 'Semua field wajib diisi!';
+    } elseif (strlen($nama) < 3) {
+        $error = 'Nama minimal harus 3 karakter!';
+    } elseif (!preg_match("/^[a-zA-Z\s\.\']+$/", $nama)) {
+        $error = 'Nama hanya boleh berisi huruf, spasi, titik, atau tanda petik!';
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $error = 'Format email tidak valid!';
+    } elseif (!preg_match("/^[0-9]{10,15}$/", $no_telp)) {
+        $error = 'Nomor telepon harus berupa angka antara 10 sampai 15 digit!';
+    } elseif (strlen($password) < 5) {
+        $error = 'Kata sandi minimal harus 5 karakter!';
     } else {
         // Cek jika email sudah terdaftar
         $stmt = $pdo->prepare("SELECT id FROM users WHERE email = ?");
@@ -36,13 +49,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             try {
                 $stmt = $pdo->prepare("INSERT INTO users (nama, email, password, no_telp, role) VALUES (?, ?, ?, ?, 'pendonasi')");
                 $stmt->execute([$nama, $email, $hashed_password, $no_telp]);
-                $success = 'Pendaftaran berhasil! Silakan masuk ke akun Anda.';
+                
+                // Ambil ID user baru untuk auto-login
+                $new_user_id = $pdo->lastInsertId();
+                
+                // Regenerasi session ID untuk keamanan
+                regenerate_session_secure();
+
+                // Set session
+                $_SESSION['user_id'] = $new_user_id;
+                $_SESSION['nama'] = $nama;
+                $_SESSION['role'] = 'pendonasi';
+                
+                // Redirect langsung ke dashboard pendonasi
+                header("Location: views/pendonasi/dashboard.php");
+                exit();
             } catch (PDOException $e) {
                 $error = 'Gagal menyimpan data: ' . $e->getMessage();
             }
         }
     }
 }
+
+require_once 'includes/header.php';
 ?>
 
 <div class="container-fluid px-0 py-0" style="margin-top: -1.5rem; min-height: calc(100vh - 140px); display: flex;">

@@ -40,6 +40,35 @@ $base_path = $is_in_subfolder ? "../../" : "./";
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <?php if (isset($_SESSION['user_id'])): ?>
+                        <?php if ($_SESSION['role'] === 'admin'): ?>
+                            <li class="nav-item">
+                                <a class="nav-link" href="<?= $base_path ?>views/admin/dashboard.php">Dashboard</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="<?= $base_path ?>views/admin/stok.php">Stok</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="<?= $base_path ?>views/admin/distribusi.php">Distribusi</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="<?= $base_path ?>views/admin/kategori.php">Kategori</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="<?= $base_path ?>views/admin/users.php">Pengguna</a>
+                            </li>
+                        <?php else: ?>
+                            <li class="nav-item">
+                                <a class="nav-link" href="<?= $base_path ?>views/pendonasi/dashboard.php">Dashboard</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="<?= $base_path ?>views/pendonasi/tambah_donasi.php">Donasi Baru</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="<?= $base_path ?>views/pendonasi/profil.php">Profil Saya</a>
+                            </li>
+                        <?php endif; ?>
+                    <?php endif; ?>
                 </ul>
                 <div class="d-flex align-items-center gap-2">
                     <?php if (isset($_SESSION["user_id"])): ?>

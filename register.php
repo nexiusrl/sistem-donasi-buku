@@ -102,15 +102,11 @@ require_once 'includes/header.php';
                     </div>
 
                     <?php if ($error): ?>
-                        <div class="alert alert-danger" role="alert">
-                            <i class="bi bi-exclamation-triangle-fill me-2"></i> <?= htmlspecialchars($error) ?>
-                        </div>
+                        <script>alert("<?= addslashes($error) ?>");</script>
                     <?php endif; ?>
 
                     <?php if ($success): ?>
-                        <div class="alert alert-success" role="alert">
-                            <i class="bi bi-check-circle-fill me-2"></i> <?= htmlspecialchars($success) ?>
-                        </div>
+                        <script>alert("<?= addslashes($success) ?>");</script>
                     <?php endif; ?>
 
                     <form action="register.php" method="POST">

@@ -84,9 +84,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
 
                 <?php if ($error): ?>
-                    <div class="alert alert-danger" role="alert">
-                        <i class="bi bi-exclamation-triangle-fill me-2"></i> <?= htmlspecialchars($error) ?>
-                    </div>
+                    <script>alert("<?= addslashes($error) ?>");</script>
                 <?php endif; ?>
 
                 <form action="kirim_buku.php?id=<?= $donation_id ?>" method="POST" id="form-kirim">

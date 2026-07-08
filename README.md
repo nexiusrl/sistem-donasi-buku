@@ -6,8 +6,8 @@ BukuBerbagi adalah platform berbasis web untuk memfasilitasi pendonasian buku fi
 
 ## 🛠️ Tech Stack & Prasyarat
 * **Bahasa & Logika**: PHP Native (v8.x didukung)
-* **CSS & Layout**: Bootstrap 5 (via CDN) & Custom CSS murni
-* **JavaScript**: Vanilla JS
+* **CSS & Layout**: Bootstrap 5 (via CDN untuk CSS) & Custom CSS murni
+* **JavaScript**: Vanilla JS (Pustaka JS Bootstrap 5 telah dilepas sepenuhnya; seluruh dialog pesan sukses/eror dikelola menggunakan fungsi `alert()` murni Vanilla JS)
 * **Database**: MySQL
 
 ---
@@ -24,15 +24,31 @@ tubes/
 ├── config/                 # Pengaturan sistem & database
 │   └── database.php        # File koneksi PDO MySQL (Auto-deteksi localhost & InfinityFree)
 ├── includes/               # Komponen template berulang
-│   ├── header.php          # Navbar & load Google Fonts & CSS
-│   ├── footer.php          # Footer & load JS
+│   ├── header.php          # Navbar & load Google Fonts & CSS (Navigasi dinamis berbasis peran)
+│   ├── footer.php          # Footer & load JS (Bootstrap JS dilepas)
 │   └── session.php         # File helper session terpusat yang aman (HttpOnly, SameSite, Secure, Lifetime=0)
 ├── views/                  # Halaman spesifik role
-│   ├── admin/              # Panel dashboard kurasi & distribusi admin
-│   └── pendonasi/          # Panel dashboard donasi & resi pendonasi
+│   ├── admin/              # Panel dashboard admin & manajemen data
+│   │   ├── dashboard.php       # Dashboard utama statistik donasi
+│   │   ├── detail_donasi.php   # Tinjau foto kelayakan buku, setujui, tolak, terima paket
+│   │   ├── distribusi.php      # Pencatatan log distribusi offline baru & riwayat log
+│   │   ├── edit_distribusi.php # Form edit log distribusi (kalkulasi stok dinamis)
+│   │   ├── hapus_distribusi.php# Skrip hapus log distribusi (kalkulasi stok dinamis)
+│   │   ├── kategori.php        # Halaman kelola kategori buku (tambah baru)
+│   │   ├── edit_kategori.php   # Form edit nama kategori buku
+│   │   ├── hapus_kategori.php  # Skrip hapus kategori buku (RESTRICT check)
+│   │   ├── stok.php            # Inventarisasi stok gudang dinamis
+│   │   └── users.php           # Halaman kelola akun pengguna & hapus akun
+│   └── pendonasi/          # Panel dashboard pendonasi
+│       ├── dashboard.php       # Riwayat donasi & tombol edit/batal pending
+│       ├── edit_donasi.php     # Form edit pengajuan donasi pending
+│       ├── hapus_donasi.php    # Skrip hapus/batal pengajuan donasi pending
+│       ├── kirim_buku.php      # Input nomor resi atau metode Dropoff/COD
+│       ├── profil.php          # Halaman edit profil & password pendonasi
+│       └── tambah_donasi.php   # Formulir donasi buku baru + upload foto
 ├── index.php               # Halaman Beranda Utama & Katalog Publik
-├── login.php               # Halaman Masuk (Split-screen)
-├── register.php            # Halaman Daftar Pendonasi (Split-screen)
+├── login.php               # Halaman Masuk (Split-screen, dialog JavaScript alert)
+├── register.php            # Halaman Daftar Pendonasi (Split-screen, dialog JavaScript alert)
 ├── logout.php              # Script hapus session
 ├── setup_db.php            # Script instalasi & seed database otomatis
 └── database.sql            # Skema DDL awal database
@@ -58,14 +74,18 @@ tubes/
 ---
 
 ## 📋 Alur Bisnis Pengujian Sistem
-1. **Daftar/Masuk**: Masuk menggunakan akun Pendonasi `budi@gmail.com`.
+1. **Daftar/Masuk**: Masuk menggunakan akun Pendonasi `budi@gmail.com` (password: `budi123`).
 2. **Ajukan Donasi**: Klik **Donasikan Buku Baru** -> isi data, unggah foto -> Kirim. (Status donasi awal adalah `Pending`).
-3. **Persetujuan Admin**: Logout, lalu masuk sebagai Admin (`admin@gmail.com`). Pada dashboard admin, pilih detail donasi budi, klik **Setujui Pengajuan**.
-4. **Kirim Buku**: Logout dan masuk kembali sebagai budi. Status donasi budi kini `Disetujui`. Klik **Kirim Buku**, pilih metode kirim (misal: Kurir), isi ekspedisi dan nomor resi, klik Konfirmasi. (Status berubah menjadi `Sedang Dikirim`).
-5. **Konfirmasi Fisik**: Masuk kembali sebagai Admin, klik detail donasi budi, klik **Konfirmasi Terima Buku Fisik**. (Status berubah menjadi `Diterima`).
-6. **Katalog & Penyaluran**:
+3. **Batal/Edit Pengajuan**: Selama donasi berstatus `Pending`, Pendonasi dapat mengklik **Edit** atau **Batal** pada dashboard mereka.
+4. **Persetujuan Admin**: Logout, lalu masuk sebagai Admin (`admin@donasibuku.com` | password: `admin123`). Pada dashboard admin, pilih detail donasi budi, klik **Setujui Pengajuan**.
+5. **Kirim Buku**: Logout dan masuk kembali sebagai budi. Status donasi budi kini `Disetujui`. Klik **Kirim Buku**, pilih metode kirim (misal: Kurir), isi ekspedisi dan nomor resi, klik Konfirmasi. (Status berubah menjadi `Sedang Dikirim`).
+6. **Konfirmasi Fisik**: Masuk kembali sebagai Admin, klik detail donasi budi, klik **Konfirmasi Terima Buku Fisik**. (Status berubah menjadi `Diterima`).
+7. **Katalog & Penyaluran**:
    * Buku budi kini otomatis muncul di **Katalog Buku Publik** di halaman depan website ([index.php](index.php)).
    * Di dashboard admin, buka menu **Stok & Inventaris** -> Klik **Salurkan Buku** untuk mencatat pendistribusian buku tersebut secara offline ke penerima target.
+8. **Koreksi Distribusi**: Pada halaman Distribusi, Admin dapat mengedit atau menghapus log distribusi. Sisa stok di gudang otomatis dikalkulasi ulang secara dinamis.
+9. **Kelola Kategori**: Admin dapat membuka menu **Kategori** untuk menambah, mengedit, atau menghapus kategori buku. (Penghapusan dicegah jika kategori masih dikaitkan dengan buku donasi).
+10. **Kelola Pengguna**: Admin dapat membuka menu **Pengguna** untuk melihat seluruh pengguna terdaftar dan menghapus akun Pendonasi.
 
 ---
 
@@ -75,14 +95,18 @@ Sistem ini memiliki dua peran utama dengan akses dan tugas yang berbeda:
 
 *   **Pendonasi (Donator)**:
     *   Mendaftarkan akun secara mandiri.
-    *   Mengajukan donasi buku baru dengan mengisi detail buku (judul, kategori, kondisi, jumlah, dan foto).
+    *   Mengajukan donasi buku baru dengan mengisi detail buku.
     *   Melacak status donasi yang diajukan.
-    *   Menginput informasi pengiriman (kurir & nomor resi, drop-off langsung, atau COD) setelah donasi disetujui.
+    *   Mengedit atau menghapus donasi jika statusnya masih `pending`.
+    *   Menginput informasi pengiriman setelah donasi disetujui.
+    *   Memperbarui profil nama, nomor telepon, dan password mandiri.
 *   **Admin**:
     *   Mengurasi/memvalidasi usulan donasi dari pendonasi (menyetujui atau menolak).
     *   Mengonfirmasi penerimaan fisik buku berdasarkan informasi pengiriman.
-    *   Mengelola stok buku yang telah berstatus "Diterima".
-    *   Mencatat penyaluran buku secara offline ke penerima (sekolah, perpustakaan jalanan, komunitas baca, panti asuhan, maupun perorangan/umum).
+    *   Menginventarisasi stok buku yang telah berstatus "Diterima".
+    *   Mencatat, memperbarui, dan menghapus log penyaluran buku secara offline ke penerima.
+    *   Mengelola master kategori buku (menambah, mengubah nama, menghapus).
+    *   Mengelola akun pengguna (melihat daftar dan menghapus akun pendonasi).
 
 ---
 
@@ -109,48 +133,6 @@ stateDiagram-v2
     Diterima --> Disalurkan : Admin Mencatat Penyaluran Offline
     Disalurkan --> [*] : Selesai (Disalurkan)
 ```
-
----
-
-## 📝 Detail Alur Bisnis Step-by-Step
-
-Proses pendonasian buku fisik secara terperinci berjalan sebagai berikut:
-
-### Langkah 1: Registrasi & Autentikasi
-1. Pengguna umum mendaftar melalui halaman `register.php`.
-2. Setelah berhasil terdaftar, pengguna masuk melalui `login.php`.
-3. Sistem mendeteksi `role` pengguna (`admin` atau `pendonasi`) berdasarkan data di database dan mengarahkan ke dashboard masing-masing.
-
-### Langkah 2: Pengajuan Donasi (Pendonasi)
-1. Pendonasi membuka halaman **Donasikan Buku Baru** (`views/pendonasi/tambah_donasi.php`).
-2. Pendonasi mengisi formulir (Judul Buku, Kategori, Kondisi, Jumlah Buku, Catatan) dan mengunggah **Foto Buku**.
-3. Data donasi disimpan di tabel `donasi` dengan status awal **`pending`**.
-
-### Langkah 3: Verifikasi & Kurasi (Admin)
-1. Admin masuk ke dashboard admin (`views/admin/dashboard.php`) dan melihat daftar donasi berstatus `pending`.
-2. Admin membuka halaman detail donasi (`views/admin/detail_donasi.php`) untuk memeriksa foto dan kelayakan buku.
-3. Admin memilih aksi:
-   * **Setujui**: Mengubah status donasi menjadi **`disetujui`**.
-   * **Tolak**: Mengubah status donasi menjadi **`ditolak`** (proses selesai dengan penolakan).
-
-### Langkah 4: Pengiriman Buku (Pendonasi)
-1. Pendonasi melihat pembaruan status di dashboard-nya. Jika statusnya **`disetujui`**, tombol **Kirim Buku** akan aktif.
-2. Pendonasi membuka halaman pengiriman (`views/pendonasi/kirim_buku.php`) dan memilih metode pengiriman:
-   * **Kurir**: Mengisi nama ekspedisi dan nomor resi pengiriman.
-   * **Drop-off / COD**: Mengisi detail rencana penyerahan fisik langsung ke lokasi drop-off.
-3. Setelah data disimpan, status donasi berubah menjadi **`dikirim`**.
-
-### Langkah 5: Konfirmasi Penerimaan Fisik (Admin)
-1. Setelah paket buku sampai di alamat Admin, Admin membuka dashboard dan memeriksa detail donasi terkait.
-2. Admin mencocokkan nomor resi/data pengiriman dan menekan tombol **Konfirmasi Terima Buku Fisik**.
-3. Status donasi diperbarui menjadi **`diterima`**.
-4. Buku yang berstatus **`diterima`** otomatis masuk ke dalam **Stok & Inventaris** sistem dan akan ditampilkan pada **Katalog Buku Publik** di halaman utama (`index.php`) agar masyarakat dapat melihat ketersediaan buku tersebut.
-
-### Langkah 6: Penyaluran Offline (Admin)
-1. Admin membuka halaman **Stok & Inventaris** (`views/admin/stok.php`).
-2. Admin memilih buku yang ingin disalurkan secara offline dan menekan tombol **Salurkan Buku** (`views/admin/distribusi.php`).
-3. Admin mengisi nama instansi/komunitas/orang umum penerima, tanggal penyaluran, jumlah buku yang disalurkan, dan keterangan tambahan.
-4. Sistem mencatat log transaksi ke tabel `distribusi` dan mengurangi jumlah/mengupdate status stok donasi yang bersangkutan jika seluruh stoknya telah disalurkan.
 
 ---
 
@@ -231,7 +213,10 @@ graph TD
     subgraph Views_Pendonasi [Dashboard Pendonasi]
         dashboard_p["views/pendonasi/dashboard.php"]
         tambah_d["views/pendonasi/tambah_donasi.php"]
+        edit_d["views/pendonasi/edit_donasi.php"]
+        hapus_d["views/pendonasi/hapus_donasi.php"]
         kirim_b["views/pendonasi/kirim_buku.php"]
+        profil_p["views/pendonasi/profil.php"]
     end
     
     %% Views Admin
@@ -240,6 +225,12 @@ graph TD
         detail_d["views/admin/detail_donasi.php"]
         stok_a["views/admin/stok.php"]
         distribusi_a["views/admin/distribusi.php"]
+        edit_dist["views/admin/edit_distribusi.php"]
+        hapus_dist["views/admin/hapus_distribusi.php"]
+        kategori_a["views/admin/kategori.php"]
+        edit_kat["views/admin/edit_kategori.php"]
+        hapus_kat["views/admin/hapus_kategori.php"]
+        users_a["views/admin/users.php"]
     end
 
     %% Relations & Flow
@@ -252,21 +243,34 @@ graph TD
     
     %% Pendonasi Flow
     dashboard_p --> tambah_d
+    dashboard_p --> edit_d
+    dashboard_p --> hapus_d
     dashboard_p --> kirim_b
+    dashboard_p --> profil_p
     
     %% Admin Flow
     dashboard_a --> detail_d
     dashboard_a --> stok_a
+    dashboard_a --> kategori_a
+    dashboard_a --> users_a
     stok_a --> distribusi_a
+    distribusi_a --> edit_dist
+    distribusi_a --> hapus_dist
+    kategori_a --> edit_kat
+    kategori_a --> hapus_kat
     
     %% Global inclusions
-    dashboard_p & tambah_d & kirim_b & dashboard_a & detail_d & stok_a & distribusi_a -.-> db_config
-    dashboard_p & tambah_d & kirim_b & dashboard_a & detail_d & stok_a & distribusi_a -.-> header
-    dashboard_p & tambah_d & kirim_b & dashboard_a & detail_d & stok_a & distribusi_a -.-> footer
+    dashboard_p & tambah_d & edit_d & hapus_d & kirim_b & profil_p -.-> db_config
+    dashboard_a & detail_d & stok_a & distribusi_a & edit_dist & hapus_dist & kategori_a & edit_kat & hapus_kat & users_a -.-> db_config
+    
+    dashboard_p & tambah_d & edit_d & hapus_d & kirim_b & profil_p -.-> header
+    dashboard_a & detail_d & stok_a & distribusi_a & edit_dist & hapus_dist & kategori_a & edit_kat & hapus_kat & users_a -.-> header
+    
+    dashboard_p & tambah_d & edit_d & hapus_d & kirim_b & profil_p -.-> footer
+    dashboard_a & detail_d & stok_a & distribusi_a & edit_dist & hapus_dist & kategori_a & edit_kat & hapus_kat & users_a -.-> footer
+    
     header & login.php & register.php & logout.php -.-> session_config
 ```
-
-*Keterangan: Garis putus-putus menunjukkan file tersebut mengikutsertakan (include) konfigurasi database, helper session, atau template layout header & footer.*
 
 ---
 
@@ -274,9 +278,8 @@ graph TD
 
 Aplikasi ini menggunakan manajemen session dan cookie terpusat yang telah diperkuat terhadap berbagai celah keamanan web:
 * **Masa Berlaku Sesi Terbatas (Lifetime = 0):** Sesi login dan cookie secara otomatis dihapus dari browser ketika pengguna menutup seluruh jendela aplikasi browser. Pengguna wajib melakukan login ulang untuk masuk kembali.
-* **HttpOnly Cookie Flag:** Mengamankan cookie session ID (`PHPSESSID`) sehingga tidak bisa diakses oleh skrip berbahaya di sisi klien (melindungi dari pencurian sesi lewat serangan XSS).
+* **HttpOnly Cookie Flag:** Mengamankan cookie session ID (`PHPSESSID`) sehingga tidak bisa diakses oleh skrip di sisi klien (melindungi dari pencurian sesi lewat serangan XSS).
 * **SameSite Lax Flag:** Melindungi aplikasi dari serangan *Cross-Site Request Forgery* (CSRF) dengan membatasi transmisi cookie pada permintaan lintas situs.
-* **Auto-Secure Flag (HTTPS/HTTP):** Cookie session secara dinamis mendeteksi penggunaan HTTPS (termasuk deteksi di balik reverse proxy) untuk memastikan session ID hanya ditransmisikan melalui saluran terenkripsi jika berjalan di produksi.
+* **Auto-Secure Flag (HTTPS/HTTP):** Cookie session secara dinamis mendeteksi penggunaan HTTPS untuk memastikan session ID hanya ditransmisikan melalui saluran terenkripsi jika berjalan di produksi.
 * **Regenerasi Session ID:** Meregenerasi ID session setiap kali status login berubah (pada proses `login.php` dan `register.php`), sehingga mencegah serangan *Session Fixation*.
 * **Force Cookie Expiry saat Logout:** Menghapus data sesi dan secara aktif memaksa masa berlaku cookie session di browser menjadi lampau untuk memastikan pembersihan total.
-

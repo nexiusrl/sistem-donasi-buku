@@ -84,9 +84,7 @@ require_once 'includes/header.php';
                     </div>
 
                     <?php if ($error): ?>
-                        <div class="alert alert-danger" role="alert">
-                            <i class="bi bi-exclamation-triangle-fill me-2"></i> <?= htmlspecialchars($error) ?>
-                        </div>
+                        <script>alert("<?= addslashes($error) ?>");</script>
                     <?php endif; ?>
 
                     <form action="login.php" method="POST">

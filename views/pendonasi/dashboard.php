@@ -28,6 +28,16 @@ try {
 ?>
 
 <div class="container py-4">
+    <?php if (isset($_SESSION['success_message'])): ?>
+        <script>alert("<?= addslashes($_SESSION['success_message']) ?>");</script>
+        <?php unset($_SESSION['success_message']); ?>
+    <?php endif; ?>
+
+    <?php if (isset($_SESSION['error_message'])): ?>
+        <script>alert("<?= addslashes($_SESSION['error_message']) ?>");</script>
+        <?php unset($_SESSION['error_message']); ?>
+    <?php endif; ?>
+
     <!-- Header Dashboard -->
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
         <div>
@@ -144,6 +154,15 @@ try {
                                         <a href="kirim_buku.php?id=<?= $donasi['id'] ?>" class="btn btn-warning btn-sm fw-semibold text-white px-3">
                                             <i class="bi bi-send-fill me-1"></i> Kirim Buku
                                         </a>
+                                    <?php elseif ($donasi['status'] === 'pending'): ?>
+                                        <div class="d-flex justify-content-center gap-2">
+                                            <a href="edit_donasi.php?id=<?= $donasi['id'] ?>" class="btn btn-warning btn-sm text-white px-3 fw-semibold">
+                                                <i class="bi bi-pencil-fill me-1"></i> Edit
+                                            </a>
+                                            <a href="hapus_donasi.php?id=<?= $donasi['id'] ?>" class="btn btn-danger btn-sm px-3 fw-semibold" onclick="return confirm('Apakah Anda yakin ingin membatalkan donasi ini?')">
+                                                <i class="bi bi-trash-fill me-1"></i> Batal
+                                            </a>
+                                        </div>
                                     <?php else: ?>
                                         <span class="text-muted small">Tidak ada aksi</span>
                                     <?php endif; ?>

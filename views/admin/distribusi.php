@@ -95,16 +95,24 @@ try {
         <h3 class="fw-bold text-dark mb-0">Manajemen Penyaluran Buku</h3>
     </div>
 
-    <?php if ($error): ?>
-        <div class="alert alert-danger" role="alert">
-            <i class="bi bi-exclamation-triangle-fill me-2"></i> <?= htmlspecialchars($error) ?>
-        </div>
+    <?php
+    $display_error = $error;
+    $display_success = $success;
+    if (isset($_SESSION['error_message'])) {
+        $display_error = $_SESSION['error_message'];
+        unset($_SESSION['error_message']);
+    }
+    if (isset($_SESSION['success_message'])) {
+        $display_success = $_SESSION['success_message'];
+        unset($_SESSION['success_message']);
+    }
+    ?>
+    <?php if ($display_error): ?>
+        <script>alert("<?= addslashes($display_error) ?>");</script>
     <?php endif; ?>
 
-    <?php if ($success): ?>
-        <div class="alert alert-success" role="alert">
-            <i class="bi bi-check-circle-fill me-2"></i> <?= htmlspecialchars($success) ?>
-        </div>
+    <?php if ($display_success): ?>
+        <script>alert("<?= addslashes($display_success) ?>");</script>
     <?php endif; ?>
 
     <div class="row g-4">
@@ -175,6 +183,7 @@ try {
                                     <th>Jumlah</th>
                                     <th>Tanggal</th>
                                     <th>Keterangan</th>
+                                    <th class="text-center">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -187,6 +196,16 @@ try {
                                         <td><?= htmlspecialchars($dist['jumlah_disalurkan']) ?> Eks</td>
                                         <td><?= date('d M Y', strtotime($dist['tanggal_distribusi'])) ?></td>
                                         <td class="small text-muted"><?= htmlspecialchars($dist['keterangan'] ?: '-') ?></td>
+                                        <td class="text-center">
+                                            <div class="d-flex justify-content-center gap-2">
+                                                <a href="edit_distribusi.php?id=<?= $dist['id'] ?>" class="btn btn-warning btn-sm text-white px-2 py-1 fw-semibold small">
+                                                    <i class="bi bi-pencil-fill"></i>
+                                                </a>
+                                                <a href="hapus_distribusi.php?id=<?= $dist['id'] ?>" class="btn btn-danger btn-sm px-2 py-1 fw-semibold small" onclick="return confirm('Apakah Anda yakin ingin menghapus log penyaluran ini?')">
+                                                    <i class="bi bi-trash-fill"></i>
+                                                </a>
+                                            </div>
+                                        </td>
                                     </tr>
                                 <?php endforeach; ?>
                             </tbody>

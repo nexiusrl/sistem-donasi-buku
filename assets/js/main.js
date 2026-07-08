@@ -27,6 +27,17 @@ document.addEventListener('DOMContentLoaded', function() {
             card.style.transform = 'translateY(0)';
         }, 100 * index);
     });
+
+    // Toggle hamburger menu (navbar collapse) secara murni Vanilla JS
+    const toggler = document.querySelector('.navbar-toggler');
+    const collapseMenu = document.querySelector('#navbarNav');
+    if (toggler && collapseMenu) {
+        toggler.addEventListener('click', function() {
+            collapseMenu.classList.toggle('show');
+            const isExpanded = collapseMenu.classList.contains('show');
+            toggler.setAttribute('aria-expanded', isExpanded);
+        });
+    }
 });
 
 // Helper konfirmasi aksi berbahaya

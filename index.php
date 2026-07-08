@@ -47,9 +47,15 @@ try {
                 </p>
                 <div class="d-flex flex-column flex-sm-row gap-3 justify-content-center justify-content-lg-start">
                     <?php if (isset($_SESSION["user_id"])): ?>
-                        <a href="views/pendonasi/dashboard.php" class="btn btn-primary btn-lg">
-                            Mulai Donasi Sekarang
-                        </a>
+                        <?php if ($_SESSION["role"] === "admin"): ?>
+                            <a href="views/admin/dashboard.php" class="btn btn-primary btn-lg">
+                                Kelola Dasbor Admin
+                            </a>
+                        <?php else: ?>
+                            <a href="views/pendonasi/dashboard.php" class="btn btn-primary btn-lg">
+                                Mulai Donasi Sekarang
+                            </a>
+                        <?php endif; ?>
                     <?php else: ?>
                         <a href="register.php" class="btn btn-primary btn-lg">
                             Daftar Sebagai Pendonasi

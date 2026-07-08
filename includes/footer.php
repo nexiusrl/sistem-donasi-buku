@@ -1,3 +1,12 @@
+<?php
+// includes/footer.php
+$script_name = $_SERVER["SCRIPT_NAME"];
+$is_in_subfolder =
+  strpos($script_name, "/views/admin/") !== false ||
+  strpos($script_name, "/views/pendonasi/") !== false;
+$base_path = $is_in_subfolder ? "../../" : "./";
+?>
+<?php if (!$is_in_subfolder): ?>
     </main>
 
     <!-- Footer Premium -->
@@ -38,12 +47,14 @@
             </div>
             <hr class="border-secondary my-4">
             <div class="d-flex flex-column flex-sm-row justify-content-between align-items-center small">
-                <p class="mb-0">&copy; <?= date(
-                  "Y",
-                ) ?> BukuBerbagi. Hak Cipta Dilindungi.</p>
+                <p class="mb-0">&copy; <?= date("Y") ?> BukuBerbagi. Hak Cipta Dilindungi.</p>
             </div>
         </div>
     </footer>
+<?php else: ?>
+        </main>
+    </div> <!-- Close .dashboard-wrapper -->
+<?php endif; ?>
 
     <!-- Custom JS -->
     <script src="<?= $base_path ?>assets/js/main.js"></script>

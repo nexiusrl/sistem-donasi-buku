@@ -38,6 +38,22 @@ document.addEventListener('DOMContentLoaded', function() {
             toggler.setAttribute('aria-expanded', isExpanded);
         });
     }
+
+    // Toggle sidebar pada mobile secara murni Vanilla JS
+    const sidebarToggle = document.querySelector('.sidebar-toggle-btn');
+    const sidebarPanel = document.querySelector('.sidebar-panel');
+    const sidebarBackdrop = document.querySelector('.sidebar-backdrop');
+    if (sidebarToggle && sidebarPanel && sidebarBackdrop) {
+        sidebarToggle.addEventListener('click', function() {
+            sidebarPanel.classList.add('show-sidebar');
+            sidebarBackdrop.classList.add('show');
+        });
+        
+        sidebarBackdrop.addEventListener('click', function() {
+            sidebarPanel.classList.remove('show-sidebar');
+            sidebarBackdrop.classList.remove('show');
+        });
+    }
 });
 
 // Helper konfirmasi aksi berbahaya

@@ -24,7 +24,14 @@ $base_path = $is_in_subfolder ? "../../" : "./";
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="<?= $base_path ?>assets/css/style.css">
+    <?php
+    $css_version = '1.0';
+    $css_file = $base_path . 'assets/css/style.css';
+    if (file_exists($css_file)) {
+        $css_version = filemtime($css_file);
+    }
+    ?>
+    <link rel="stylesheet" href="<?= $base_path ?>assets/css/style.css?v=<?= $css_version ?>">
 </head>
 <body class="<?= $is_in_subfolder ? 'dashboard-layout-body' : '' ?>">
 

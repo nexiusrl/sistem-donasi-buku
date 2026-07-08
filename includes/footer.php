@@ -57,6 +57,13 @@ $base_path = $is_in_subfolder ? "../../" : "./";
 <?php endif; ?>
 
     <!-- Custom JS -->
-    <script src="<?= $base_path ?>assets/js/main.js"></script>
+    <?php
+    $js_version = '1.0';
+    $js_file = $base_path . 'assets/js/main.js';
+    if (file_exists($js_file)) {
+        $js_version = filemtime($js_file);
+    }
+    ?>
+    <script src="<?= $base_path ?>assets/js/main.js?v=<?= $js_version ?>"></script>
 </body>
 </html>
